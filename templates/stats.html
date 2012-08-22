@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link type="text/css" rel="stylesheet" href="/static/filler.css" />
+  </head>
+  <body>
+    <p>
+      {% for statline in stats %}
+        {{ statline.info }}<br />
+      {% endfor %}
+    </p>
+    <p>
+      <a href="/menu">return to menu</a>
+    </p>
+
+  </body>
+</html>
