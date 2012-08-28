@@ -1,7 +1,9 @@
 import cgi
+import json
 import datetime
 import urllib
 import webapp2
+import logging
 	
 from google.appengine.ext import db
 from google.appengine.api import users
@@ -11,6 +13,14 @@ import os
 
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
+
+class Feedback(db.Model):
+  reserved = db.IntegerProperty()
+  unit = db.StringProperty()
+  runid = db.StringProperty()
+  author = db.StringProperty()
+  browser = db.StringProperty()
+  timestamp = db.DateTimeProperty(auto_now_add=True)
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
@@ -50,9 +60,10 @@ class Filler(webapp2.RequestHandler):
 class Stats(webapp2.RequestHandler):
     def get(self):
 
-        # TODO: get data from db and show it on the page
-
+        feedbacks = Feedback.all()
+ 
         template_values = {
+            'feedbacks': feedbacks
         }
 
         template = jinja_environment.get_template('templates/stats.html')
@@ -60,8 +71,15 @@ class Stats(webapp2.RequestHandler):
 
 
 class Heartbeat(webapp2.RequestHandler):
-  def post(self):
-    pass # TODO: process heartbeat and show data
+    def post(self):
+        fb = Feedback()
+        args = json.loads(self.request.body)
+        fb.reserved = args['reserved']
+        fb.unit = args['unit']
+        fb.runid = args['runid']
+        fb.author = users.get_current_user().user_id()
+        fb.browser = self.request.headers.get('user_agent')
+        fb.put()
 
 app = webapp2.WSGIApplication([('/', MainPage),
                                ('/login', Login),

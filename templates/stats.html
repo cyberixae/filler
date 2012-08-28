@@ -4,11 +4,26 @@
     <link type="text/css" rel="stylesheet" href="/static/filler.css" />
   </head>
   <body>
-    <p>
-      {% for statline in stats %}
-        {{ statline.info }}<br />
+    <table>
+      <tr>
+        <th>reserved</th>
+        <th>unit</th>
+        <th>runid</th>
+        <th>author</th>
+        <th>timestamp</th>
+        <th>browser</th>
+      </tr>
+      {% for fb in feedbacks %}
+      <tr>
+        <td>{{ fb.reserved }}</td>
+        <td>{{ fb.unit }}</td>
+        <td>{{ fb.runid }}</td>
+        <td>{{ fb.author }}</td>
+        <td>{{ fb.timestamp }}</td>
+        <td>{{ fb.browser }}</td>
+      </tr>
       {% endfor %}
-    </p>
+    </table>
     <p>
       <a href="/menu">return to menu</a>
     </p>
